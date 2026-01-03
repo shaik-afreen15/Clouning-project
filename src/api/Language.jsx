@@ -20,7 +20,7 @@ const languagesText = {
     passwordInvalid: "Password is invalid/blank",
     userNotExist: "User doesn't exist | Go for Sign up",
     emailUsed: "Email already in use | Go for Sign In",
-
+ 
     originals: "Netflix Originals",
     trending: "Trending Now",
     nowPlaying: "Now Playing",

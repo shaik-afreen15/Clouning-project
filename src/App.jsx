@@ -16,9 +16,9 @@ import Search from './Components/Search';
 const App = () => {
     
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [lang, setLang] = useState("en")
+  const [lang, setLang] = useState("en") 
 
-  return (
+  return (   
         <Fragment>
             <Routes> 
                <Route path="/" element={

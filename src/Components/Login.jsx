@@ -79,7 +79,7 @@ const Login = ({lang}) => {
 
   return (
     <div className="login">
-      <div className="holder">
+      <div className="holder ">
         <h1 className="text-white">{page ? languagesText[lang].loginTitle : languagesText[lang].registerTitle}</h1>
         <br />
 

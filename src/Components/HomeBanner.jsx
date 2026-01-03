@@ -1,40 +1,69 @@
 import React from 'react'
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from './FirebaseConfig';
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { getAuth } from 'firebase/auth';
-import languagesText from '../api/Language';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import languagesText from "../api/Language";
 
+const HomeBanner = ({ lang = "en" }) => {
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
 
-const HomeBanner = ({lang}) => {
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const [email, setEmail] = useState('')
-    const [error, setError] = useState('')
-    const navigate = useNavigate(); 
-    
+  const handleGetStarted = () => {
+    navigate("/register", {
+      state: { email: email.trim() },
+    });
+  };
 
-    const handleGetStarted =  ()=>{
-            navigate('/register',{ state: { email: email.trim() } });
-       }
+  const text = languagesText?.[lang];
 
   return (
-      <div className="home-banner">
+    <section className="home-banner">
+      {/* overlay */}
+      <div className="home-overlay"></div>
+
+      {/* content */}
       <div className="our-story">
-        <h1 className="our-story-card-title" data-uia="hero-title">{languagesText[lang].title}</h1>
-        <h2 className="our-story-card-subtitle" data-uia="our-story-card-subtitle">{languagesText[lang].subtitle}</h2>
-        <p className="email-form-title">{languagesText[lang].description}</p>
-        <div className="input-group">
-          {/* <input type="email" className="form-control" placeholder="Email Address" value={email} onChange={(e)=>setEmail(e.target.value)} /> */}
-          <button className="input-group-button btn-danger text-white" onClick={handleGetStarted}>{languagesText[lang].button}</button>
+        <div className="our-story-content">
+          <h1 className="our-story-card-title">
+            {text?.title}
+          </h1>
+
+          <h2 className="our-story-card-subtitle">
+            {text?.subtitle}
+          </h2>
+
+          <p className="email-form-title">
+            {text?.description}
+          </p>
+
+          <div className="input-group">
+            {/* optional email */}
+            {/* <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            /> */}
+
+            <button
+              className="get-started-btn"
+              onClick={handleGetStarted}
+            >
+              {text?.button}
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="shadow"></div>
-      <img className="concord-img vlv-creative" src="https://assets.nflxext.com/ffe/siteui/vlv3/6e32b96a-d4be-4e44-a19b-1bd2d2279b51/ee068656-14b9-4821-89b4-53b4937d9f1c/IN-en-20220516-popsignuptwoweeks-perspective_alpha_website_small.jpg"  alt=""></img>
-    </div>
-  )
-}
+      {/* background image */}
+      <img
+        className="banner-img"
+        src="https://assets.nflxext.com/ffe/siteui/vlv3/6e32b96a-d4be-4e44-a19b-1bd2d2279b51/ee068656-14b9-4821-89b4-53b4937d9f1c/IN-en-20220516-popsignuptwoweeks-perspective_alpha_website_small.jpg"
+        alt="Netflix background"
+      />
+    </section>
+  );
+};
 
-export default HomeBanner
+export default HomeBanner;
