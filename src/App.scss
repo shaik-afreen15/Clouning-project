@@ -538,15 +538,19 @@ html, body {
 @media (max-width: 768px) {
   .modal-container {
     width: 65%;
-    height: 60vh;
+    height: 47vh;
   }
-
+  
+  .modal-content h1{
+     font-size: 15px;
+  }
   .modal-banner {
     height: 20vh;
   }
 
   .modal-content p{
-    font-size: 11px;
+    font-size: 9px;
+    margin-bottom: 2px;
   }
 }
 
