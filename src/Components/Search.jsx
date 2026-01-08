@@ -6,13 +6,13 @@ const API_KEY = "df2bf13f7d3e63d7e60557693d7845da";
 
 const Search = ({ onMovieClick }) => {
     const navigate = useNavigate()
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState("");        
     const [results, setResults] = useState([]);
 
   useEffect(() => {
-    if (!query) {
+    if (!query) {     
       setResults([]);
-      return;
+      return;     
     }
 
     const fetchSearch = async () => {
