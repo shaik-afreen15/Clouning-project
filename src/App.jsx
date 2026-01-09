@@ -36,7 +36,17 @@ const App = () => {
           </>
         }
       />
-
+      
+        <Route
+          path="/register"
+          element={
+            <>
+              <Header lang={lang} setLang={setLang} />
+              <Login lang={lang} />
+            </>
+          }
+        />
+        
       <Route
         path="/dashboard"
         element={
