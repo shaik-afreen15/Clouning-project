@@ -1,60 +1,109 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-const API_KEY = "df2bf13f7d3e63d7e60557693d7845da";
+import {
+  setQuery,
+  clearResults,
+  clearQuery,
+  fetchSearchResults,
+  setFilter,
+} from "../redux/search/searchSlice";
 
 const Search = ({ onMovieClick }) => {
-    const navigate = useNavigate()
-    const [query, setQuery] = useState("");        
-    const [results, setResults] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const { query, results, status, filter } = useSelector(
+    (state) => state.search
+  );
+
+  // Clear search on exit
   useEffect(() => {
-    if (!query) {     
-      setResults([]);
-      return;     
+    return () => {
+      dispatch(clearQuery());
+    };
+  }, [dispatch]);
+
+  // Debounced search
+  useEffect(() => {
+    if (!query || query.trim().length < 2) {
+      dispatch(clearResults());
+      return;
     }
 
-    const fetchSearch = async () => {
-      const res = await axios.get(
-        `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
-      );
-      setResults(res.data.results);
-    };
+    const delay = setTimeout(() => {
+      dispatch(fetchSearchResults(query.trim()));
+    }, 400);
 
-    fetchSearch();
-  }, [query]);
+    return () => clearTimeout(delay);
+  }, [query, dispatch]);
+
+  // Apply filter
+  const filteredResults = results.filter((item) => {
+    if (filter === "all")
+      return item.media_type === "movie" || item.media_type === "tv";
+
+    return item.media_type === filter;
+  });
 
   return (
     <div className="search-page">
-        <div className="search-top">
+      <div className="search-top">
         <button className="back-btn" onClick={() => navigate("/dashboard")}>
           ←
         </button>
-        </div>
-      {/* SEARCH INPUT */}
+      </div>
+
+      {/* INPUT */}
       <input
         className="search-input"
         type="text"
         placeholder="Search movies, TV shows"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => dispatch(setQuery(e.target.value))}
       />
 
-      {/* SEARCH RESULTS */}
-      <div className="row_posters">
-        {results.map(
-          (item) =>
-            item.poster_path && (
-              <img
-                key={item.id}
-                className="row_poster row_posterLarge"
-                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                alt={item.title || item.name}
-                onClick={() => onMovieClick(item)}
-              />
-            )
-        )}
+      {/* FILTER BUTTONS */}
+      <div className="search-filters">
+        <button
+          className={filter === "all" ? "active" : ""}
+          onClick={() => dispatch(setFilter("all"))}
+        >
+          All
+        </button>
+        <button
+          className={filter === "movie" ? "active" : ""}
+          onClick={() => dispatch(setFilter("movie"))}
+        >
+          Movies
+        </button>
+        <button
+          className={filter === "tv" ? "active" : ""}
+          onClick={() => dispatch(setFilter("tv"))}
+        >
+          TV Shows
+        </button>
+      </div>
+
+      {status === "loading" && <p style={{ color: "white" }}>Searching...</p>}
+
+      {/* RESULTS */}
+      <div className="row_posters search-grid">
+        {filteredResults.map((item) => {
+          const imagePath = item.poster_path || item.profile_path;
+          if (!imagePath) return null;
+
+          return (
+            <img
+              key={`${item.id}-${item.media_type}`}
+              className="row_poster row_posterLarge"
+              src={`https://image.tmdb.org/t/p/w500${imagePath}`}
+              alt={item.title || item.name}
+              onClick={() => onMovieClick(item)}
+              loading="lazy"
+            />
+          );
+        })}
       </div>
     </div>
   );

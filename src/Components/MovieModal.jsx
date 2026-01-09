@@ -15,7 +15,7 @@ const MovieModal = ({ movie, closeModal }) => {
           className="modal-banner"
           src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
           alt={movie.title || movie.name}
-        />
+         />
 
         {/* Content */}
         <div className="modal-content">
