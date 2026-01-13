@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import {
   setQuery,
   clearResults,
-  clearQuery,
+  clearQuery,  
   fetchSearchResults,
   setFilter,
-} from "../redux/search/searchSlice";
+} from "../redux/searchSlice";
 
 const Search = ({ onMovieClick }) => {
   const navigate = useNavigate();
@@ -17,14 +17,12 @@ const Search = ({ onMovieClick }) => {
     (state) => state.search
   );
 
-  // Clear search on exit
   useEffect(() => {
-    return () => {
+    return () => { 
       dispatch(clearQuery());
     };
   }, [dispatch]);
 
-  // Debounced search
   useEffect(() => {
     if (!query || query.trim().length < 2) {
       dispatch(clearResults());
@@ -54,7 +52,6 @@ const Search = ({ onMovieClick }) => {
         </button>
       </div>
 
-      {/* INPUT */}
       <input
         className="search-input"
         type="text"
@@ -63,7 +60,6 @@ const Search = ({ onMovieClick }) => {
         onChange={(e) => dispatch(setQuery(e.target.value))}
       />
 
-      {/* FILTER BUTTONS */}
       <div className="search-filters">
         <button
           className={filter === "all" ? "active" : ""}
@@ -87,7 +83,6 @@ const Search = ({ onMovieClick }) => {
 
       {status === "loading" && <p style={{ color: "white" }}>Searching...</p>}
 
-      {/* RESULTS */}
       <div className="row_posters search-grid">
         {filteredResults.map((item) => {
           const imagePath = item.poster_path || item.profile_path;

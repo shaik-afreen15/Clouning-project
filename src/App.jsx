@@ -14,6 +14,12 @@ const Search = lazy(() => import("./Components/Search"));
 const App = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [lang, setLang] = useState("en");
+  const [currentUser, setCurrentUser] = useState(localStorage.getItem("currentUser"));
+
+  const handleMovieClick = (movie) => {
+    // saveRecentlyWatched(movie);
+    setSelectedMovie(movie);
+  };
 
   return (
     <Routes>
@@ -32,21 +38,21 @@ const App = () => {
         element={
           <>
             <Header lang={lang} setLang={setLang} />
-            <Login lang={lang} />
+            <Login lang={lang} onLogin={setCurrentUser} />
           </>
         }
       />
-      
-        <Route
-          path="/register"
-          element={
-            <>
-              <Header lang={lang} setLang={setLang} />
-              <Login lang={lang} />
-            </>
-          }
-        />
-        
+
+      <Route
+        path="/register"
+        element={
+          <>
+            <Header lang={lang} setLang={setLang} />
+            <Login lang={lang} onLogin={setCurrentUser} />
+          </>
+        }
+      />
+
       <Route
         path="/dashboard"
         element={
@@ -54,14 +60,12 @@ const App = () => {
             <Header lang={lang} setLang={setLang} />
             <Banner lang={lang} />
 
-         <List titleKey="originals" param="originals" lang={lang} onMovieClick={setSelectedMovie} />
-         <List titleKey="trending" param="trending" lang={lang} onMovieClick={setSelectedMovie} />
-         <List titleKey="nowPlaying" param="now_playing" lang={lang} onMovieClick={setSelectedMovie} />
-         <List titleKey="popular" param="popular" lang={lang} onMovieClick={setSelectedMovie} />
-         <List titleKey="topRated" param="top_rated" lang={lang} onMovieClick={setSelectedMovie} />
-         <List titleKey="upcoming" param="upcoming" lang={lang} onMovieClick={setSelectedMovie} />
-
-   
+            <List titleKey="originals" param="originals" lang={lang} onMovieClick={handleMovieClick} />
+            <List titleKey="trending" param="trending" lang={lang} onMovieClick={handleMovieClick} />
+            <List titleKey="nowPlaying" param="now_playing" lang={lang} onMovieClick={handleMovieClick} />
+            <List titleKey="popular" param="popular" lang={lang} onMovieClick={handleMovieClick} />
+            <List titleKey="topRated" param="top_rated" lang={lang} onMovieClick={handleMovieClick} />
+            <List titleKey="upcoming" param="upcoming" lang={lang} onMovieClick={handleMovieClick} />
 
             {selectedMovie && (
               <MovieModal movie={selectedMovie} closeModal={() => setSelectedMovie(null)} />
@@ -74,7 +78,7 @@ const App = () => {
         path="/search"
         element={
           <>
-            <Search onMovieClick={setSelectedMovie} />
+            <Search onMovieClick={handleMovieClick} />
             {selectedMovie && (
               <MovieModal movie={selectedMovie} closeModal={() => setSelectedMovie(null)} />
             )}

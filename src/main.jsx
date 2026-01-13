@@ -7,14 +7,14 @@ import "../node_modules/bootstrap-scss/bootstrap.scss";
 import "./index.css";
 
 import App from "./App";
-import { store } from "./redux/search/store";
+import { store } from "./redux/store";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <Suspense
-          fallback={
+          fallback={ 
             <div
               style={{
                 color: "white",
